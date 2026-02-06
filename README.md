@@ -293,4 +293,4 @@ controller.destroy();
 
 ## License
 
-TBD
+[MIT](LICENSE)
