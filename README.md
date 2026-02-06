@@ -191,7 +191,6 @@ The default `ModalHost` provides a minimal, accessible modal UI. To use your own
 ```svelte
 <script lang="ts">
   import { ModalProvider } from 'svelte-supermodals';
-  import type { ModalHostProps } from 'svelte-supermodals';
   import MyCustomHost from './MyCustomHost.svelte';
 
   let { children } = $props();
