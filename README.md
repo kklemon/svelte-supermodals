@@ -210,6 +210,65 @@ Your custom host receives these props:
 | `onRequestClose` | `() => void`                  | Call to close the modal              |
 | `onOpenChange`   | `(open: boolean) => void`     | Called when open state changes        |
 
+### Example: shadcn-svelte
+
+Create a custom host that renders modals using [shadcn-svelte](https://www.shadcn-svelte.com)'s Dialog components:
+
+```svelte
+<!-- ShadcnModalHost.svelte -->
+<script lang="ts">
+  import * as Dialog from '$lib/components/ui/dialog';
+  import type { ModalHostProps } from 'svelte-supermodals';
+
+  let { open, modal, onRequestClose, onOpenChange }: ModalHostProps = $props();
+</script>
+
+{#if open && modal}
+  <Dialog.Root {open} {onOpenChange}>
+    <Dialog.Content
+      class={modal.config?.ui?.className ?? ''}
+      showCloseButton={modal.config?.showCloseButton !== false}
+    >
+      <Dialog.Header>
+        {#if modal.title}
+          <Dialog.Title>
+            {@render modal.title()}
+          </Dialog.Title>
+        {/if}
+        {#if modal.body}
+          <Dialog.Description>
+            {@render modal.body()}
+          </Dialog.Description>
+        {/if}
+      </Dialog.Header>
+      {#if modal.footer}
+        <Dialog.Footer>
+          {@render modal.footer()}
+        </Dialog.Footer>
+      {/if}
+    </Dialog.Content>
+  </Dialog.Root>
+{/if}
+```
+
+Then pass it to the provider:
+
+```svelte
+<!-- +layout.svelte -->
+<script lang="ts">
+  import { ModalProvider } from 'svelte-supermodals';
+  import ShadcnModalHost from '$lib/components/ShadcnModalHost.svelte';
+
+  let { children } = $props();
+</script>
+
+<ModalProvider host={ShadcnModalHost}>
+  {@render children()}
+</ModalProvider>
+```
+
+Everything else stays the same — `useModal()`, `open`, `push`, `enqueue`, and all stack/queue behavior work exactly as before. Only the rendering changes.
+
 ## Headless Core
 
 For advanced use cases, the core state machine can be used directly without the Svelte integration layer:
